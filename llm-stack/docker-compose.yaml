@@ -92,3 +92,32 @@ services:
       langfuse-clickhouse:
         condition: service_started
     restart: on-failure
+
+  #######################################
+  # 5. Prometheus
+  #######################################
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: llm-stack_prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml.template:/etc/prometheus/prometheus.yml.template
+      - ./entrypoint-prometheus.sh:/entrypoint-prometheus.sh
+      - prometheus-data:/prometheus
+    environment:
+      - VLLM_METRICS_TARGET=${VLLM_METRICS_TARGET}
+    entrypoint: ["/bin/sh", "/entrypoint-prometheus.sh"]
+
+  #######################################
+  # 6. Grafana
+  #######################################
+  grafana:
+    image: grafana/grafana:latest
+    container_name: llm-stack_grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
