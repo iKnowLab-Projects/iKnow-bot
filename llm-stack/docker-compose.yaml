@@ -121,3 +121,9 @@ services:
       - grafana-data:/var/lib/grafana
     depends_on:
       - prometheus
+
+volumes:
+  langfuse-db-data:
+  langfuse-clickhouse-data:
+  prometheus-data:
+  grafana-data:
