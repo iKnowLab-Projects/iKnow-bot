@@ -1,0 +1,10 @@
+models:
+  - name: qwen-vl
+    litellm_params:
+      model: openai/Qwen/Qwen3-VL-8B-Thinking-FP8
+      api_base: ${VLLM_API_BASE}
+      api_key: "EMPTY"
+
+litellm_settings:
+  drop_params: true
+  set_verbose: true
