@@ -122,8 +122,26 @@ services:
     depends_on:
       - prometheus
 
+  #######################################
+  # 7. OpenWebUI
+  #######################################
+  openwebui:
+    image: ghcr.io/openwebui/openwebui:main
+    container_name: llm-stack_openwebui
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_BASE=http://litellm:4000/v1
+      - OPENAI_API_KEY=sk-test
+      - OPENAI_API_MODEL=qwen-vl
+    volumes:
+      - open-webui-data:/app/backend/data
+    depends_on:
+      - litellm
+
 volumes:
   langfuse-db-data:
   langfuse-clickhouse-data:
   prometheus-data:
   grafana-data:
+  open-webui-data:
