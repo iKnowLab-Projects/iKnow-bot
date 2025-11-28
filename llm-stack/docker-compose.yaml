@@ -12,10 +12,12 @@ services:
     volumes:
       - ./litellm_config.yaml:/app/config.yaml
     environment:
+      - LANGFUSE_HOST=http://langfuse-server:3000
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY}
       - LITELLM_CONFIG_PATH=/app/config.yaml
       - LITELLM_LOG=DEBUG
       - OPENAI_API_KEY=EMPTY
-      - VLLM_API_BASE=${VLLM_API_BASE}
     command: ["--config", "/app/config.yaml", "--port", "4000", "--host", "0.0.0.0", "--detailed_debug"]
 
   #######################################
@@ -126,10 +128,10 @@ services:
   # 7. OpenWebUI
   #######################################
   openwebui:
-    image: ghcr.io/openwebui/openwebui:main
+    image: ghcr.io/open-webui/open-webui:main
     container_name: llm-stack_openwebui
     ports:
-      - "8000:8000"
+      - "8080:8080"
     environment:
       - OPENAI_API_BASE=http://litellm:4000/v1
       - OPENAI_API_KEY=sk-test

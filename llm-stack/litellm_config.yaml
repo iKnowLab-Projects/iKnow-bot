@@ -1,5 +1,5 @@
-models:
-  - name: qwen-vl
+model_list:
+  - model_name: qwen-vl
     litellm_params:
       model: openai/Qwen/Qwen3-VL-8B-Thinking-FP8
       api_base: ${VLLM_API_BASE}
@@ -8,3 +8,5 @@ models:
 litellm_settings:
   drop_params: true
   set_verbose: true
+  success_callback: ["langfuse"]
+  failure_callback: ["langfuse"]
