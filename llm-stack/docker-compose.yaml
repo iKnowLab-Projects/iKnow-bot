@@ -139,6 +139,45 @@ services:
     depends_on:
       - litellm
 
+  #######################################
+  # 8. Discord Bot
+  #######################################
+  discord-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    container_name: llm-stack_discord-bot
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - OPENAI_API_BASE=http://litellm:4000/v1
+      - OPENAI_API_KEY=sk-test
+      - MODEL_NAME=qwen-vl
+      - WEB_VIEWER_URL=${WEB_VIEWER_URL}
+      - SHOW_THOUGHT_PROCESS=${SHOW_THOUGHT_PROCESS}
+      - TARGET_CONFERENCES=${TARGET_CONFERENCES}
+      - CCF_CATEGORIES=${CCF_CATEGORIES}
+    volumes:
+      - ./reports:/app/reports
+    depends_on:
+      - litellm
+      - web-viewer
+    restart: unless-stopped
+
+  #######################################
+  # 9. Web Viewer for Reports
+  #######################################
+  web-viewer:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    container_name: llm-stack_web-viewer
+    command: ["python", "web_viewer.py"]
+    ports:
+      - "5050:5050"
+    volumes:
+      - ./reports:/app/reports
+    restart: unless-stopped
+
 volumes:
   langfuse-db-data:
   langfuse-clickhouse-data:

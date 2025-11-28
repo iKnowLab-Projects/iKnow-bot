@@ -1,0 +1,17 @@
+FROM python:3.10-slim
+
+# 로그 즉시 출력 설정
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# 필요한 라이브러리 설치 (PyYAML, pytz 추가됨)
+RUN pip install --no-cache-dir discord.py openai aiohttp beautifulsoup4 pypdf pymupdf fastapi uvicorn PyYAML pytz
+
+# 소스 코드 복사
+COPY config.py .
+COPY discord_bot.py .
+COPY web_viewer.py .
+
+# 기본 실행 명령어
+CMD ["python", "discord_bot.py"]
