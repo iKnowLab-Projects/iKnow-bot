@@ -63,18 +63,24 @@ class MessageFormatter:
     
     def format_thought(self, content: str) -> str:
         """Format thought process based on configuration"""
-        match = re.search(r'<thought>(.*?)</thought>', content, flags=re.DOTALL)
-        if not match:
-            return content
+        if '</think>' not in content:
+            return content.strip()
         
-        thought = match.group(1).strip()
-        answer = re.sub(r'<thought>.*?</thought>', '', content, flags=re.DOTALL).strip()
+        # Split by </think> - everything before is thinking, everything after is answer
+        parts = content.split('</think>', 1)
+        think = parts[0].strip()
         
-        if self.config.show_thought_process == "spoiler":
-            return f"||**💭 사고 과정**\\n{thought[:900]}...||\\n\\n{answer}"
+        think = re.sub(r'^<think>\s*', '', think, flags=re.DOTALL).strip()
+        
+        answer = parts[1].strip() if len(parts) > 1 else ""
+        
+        if self.config.show_thought_process == "hide":
+            return answer
         elif self.config.show_thought_process == "block":
-            return f"**💭 사고 과정**\\n> " + thought[:900].replace("\\n", "\\n> ") + f"\\n\\n{answer}"
-        return answer
+            return f"**💭 사고 과정**\n> " + think[:900].replace("\n", "\n> ") + f"\n\n{answer}"
+        else:  # "spoiler" or default
+            separator = "\n\n" if answer else ""
+            return f"||**💭 사고 과정**\n{think[:900]}||{separator}{answer}"
     
     @staticmethod
     async def send_split_message(ctx, text: str):
