@@ -10,13 +10,17 @@ services:
     ports:
       - "4000:4000"
     volumes:
-      - ./litellm_config.yaml:/app/config.yaml
+      - ./litellm_config.yaml.template:/app/config.yaml.template
+      - ./entrypoint-litellm.sh:/entrypoint-litellm.sh
     environment:
+      - LANGFUSE_HOST=http://langfuse-server:3000
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY}
       - LITELLM_CONFIG_PATH=/app/config.yaml
       - LITELLM_LOG=DEBUG
       - OPENAI_API_KEY=EMPTY
       - VLLM_API_BASE=${VLLM_API_BASE}
-    command: ["--config", "/app/config.yaml", "--port", "4000", "--host", "0.0.0.0", "--detailed_debug"]
+    entrypoint: ["/bin/sh", "/entrypoint-litellm.sh"]
 
   #######################################
   # 2. Langfuse-DB
@@ -126,10 +130,10 @@ services:
   # 7. OpenWebUI
   #######################################
   openwebui:
-    image: ghcr.io/openwebui/openwebui:main
+    image: ghcr.io/open-webui/open-webui:main
     container_name: llm-stack_openwebui
     ports:
-      - "8000:8000"
+      - "8080:8080"
     environment:
       - OPENAI_API_BASE=http://litellm:4000/v1
       - OPENAI_API_KEY=sk-test
@@ -138,6 +142,45 @@ services:
       - open-webui-data:/app/backend/data
     depends_on:
       - litellm
+
+  #######################################
+  # 8. Discord Bot
+  #######################################
+  discord-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    container_name: llm-stack_discord-bot
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - OPENAI_API_BASE=http://litellm:4000/v1
+      - OPENAI_API_KEY=sk-test
+      - MODEL_NAME=qwen-vl
+      - WEB_VIEWER_URL=${WEB_VIEWER_URL}
+      - SHOW_THOUGHT_PROCESS=${SHOW_THOUGHT_PROCESS}
+      - TARGET_CONFERENCES=${TARGET_CONFERENCES}
+      - CCF_CATEGORIES=${CCF_CATEGORIES}
+    volumes:
+      - ./reports:/app/reports
+    depends_on:
+      - litellm
+      - web-viewer
+    restart: unless-stopped
+
+  #######################################
+  # 9. Web Viewer for Reports
+  #######################################
+  web-viewer:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    container_name: llm-stack_web-viewer
+    command: ["python", "web_viewer.py"]
+    ports:
+      - "5050:5050"
+    volumes:
+      - ./reports:/app/reports
+    restart: unless-stopped
 
 volumes:
   langfuse-db-data:
