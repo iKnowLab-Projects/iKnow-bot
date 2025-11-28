@@ -10,7 +10,8 @@ services:
     ports:
       - "4000:4000"
     volumes:
-      - ./litellm_config.yaml:/app/config.yaml
+      - ./litellm_config.yaml.template:/app/config.yaml.template
+      - ./entrypoint-litellm.sh:/entrypoint-litellm.sh
     environment:
       - LANGFUSE_HOST=http://langfuse-server:3000
       - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY}
@@ -18,7 +19,8 @@ services:
       - LITELLM_CONFIG_PATH=/app/config.yaml
       - LITELLM_LOG=DEBUG
       - OPENAI_API_KEY=EMPTY
-    command: ["--config", "/app/config.yaml", "--port", "4000", "--host", "0.0.0.0", "--detailed_debug"]
+      - VLLM_API_BASE=${VLLM_API_BASE}
+    entrypoint: ["/bin/sh", "/entrypoint-litellm.sh"]
 
   #######################################
   # 2. Langfuse-DB
