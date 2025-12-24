@@ -74,7 +74,7 @@ class MessageFormatter:
         
         answer = parts[1].strip() if len(parts) > 1 else ""
         
-        if self.config.show_thought_process == "hide":
+        if self.config.show_thought_process == "hidden":
             return answer
         elif self.config.show_thought_process == "block":
             return f"**💭 사고 과정**\n> " + think[:900].replace("\n", "\n> ") + f"\n\n{answer}"
