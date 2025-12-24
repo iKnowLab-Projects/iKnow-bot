@@ -320,8 +320,8 @@ class DiscordBot(commands.Bot):
             
             await ctx.message.remove_reaction("⏳", self.user)
 
-        @self.command(name="Hello World!")
-        async def bot_test(ctx, *):
+        @self.command(name="Hi")
+        async def bot_test(ctx):
             msg = await ctx.send("Greetings...")
             await msg.delete()
             await self.formatter.send_split_message(ctx, "Hello World! o((>ω< ))o)")
