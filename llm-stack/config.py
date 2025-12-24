@@ -32,6 +32,7 @@ class BotConfig:
     
     # Report Settings
     reports_dir: str = "/app/reports"
+    web_viewer_url: str = "http://localhost:5050"
     
     @classmethod
     def from_env(cls) -> "BotConfig":
