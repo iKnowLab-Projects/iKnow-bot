@@ -319,6 +319,12 @@ class DiscordBot(commands.Bot):
                 await ctx.send(embed=embed)
             
             await ctx.message.remove_reaction("⏳", self.user)
+
+        @self.command(name="Hello World!")
+        async def bot_test(ctx, *):
+            msg = await ctx.send("Greetings...")
+            await msg.delete()
+            await self.formatter.send_split_message(ctx, "Hello World! o((>ω< ))o)")
         
         @self.command(name="chat")
         async def simple_chat(ctx, *, text=None):
