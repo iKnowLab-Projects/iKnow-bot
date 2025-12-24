@@ -13,7 +13,7 @@ pipeline {
                 script {
                     dir('llm-stack') {
                         // Inject secrets from Host (mounted in Jenkins container)
-                        sh 'cp /var/jenkins_home/.env.production .env'
+                        sh 'cp /home/wansik/Projects/jenkins_home/.env.production .env'
                         sh 'docker-compose up -d --build'
                     }
                 }
