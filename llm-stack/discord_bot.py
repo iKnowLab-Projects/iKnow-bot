@@ -452,7 +452,7 @@ class DiscordBot(commands.Bot):
             if not content:
                 return await ctx.send("❌ 읽기 실패")
             
-            prompt = f"웹사이트 내용을 요약해줘 (요약, 방법론, 결과, 제안):\\n{content}"
+            prompt = f"웹사이트 내용을 요약해줘:\\n{content}"
             resp = await self.llm.get_response([{"role": "user", "content": prompt}])
             formatted = self.formatter.format_thought(resp)
             
