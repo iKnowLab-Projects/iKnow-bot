@@ -9,5 +9,4 @@ app.mount("/", StaticFiles(directory="/app/reports", html=True), name="reports")
 
 if __name__ == "__main__":
     import uvicorn
-    # 도커 내부 포트 8000 (외부에는 5050으로 매핑됨)
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=5050)
