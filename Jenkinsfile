@@ -11,7 +11,9 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh 'docker-compose up -d --build'
+                    dir('llm-stack') {
+                        sh 'docker-compose up -d --build'
+                    }
                 }
             }
         }
