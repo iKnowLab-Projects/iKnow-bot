@@ -20,7 +20,7 @@ class BotConfig:
     model_name: str = "qwen-vl"
     
     # Bot Settings
-    web_viewer_url: str = "http://192.168.0.88:5050"
+    web_viewer_url: str = os.getenv("WEB_VIEWER_URL", "localhost:5050")
     show_thought_process: str = "hidden"  # hidden, spoiler, or block
     
     # Conference Settings
@@ -44,17 +44,17 @@ class BotConfig:
         # Parse conference lists
         target_conferences = os.getenv(
             "TARGET_CONFERENCES",
-            "neurips,icml,iclr,cvpr,iccv,eccv,aaai,ijcai,acl,emnlp,naacl,coling,colm,sigkdd,cikm,recsys,www,sigir,wsdm,icse,fse"
+            "neurips,icml,iclr,cvpr,iccv,eccv,aaai,ijcai,acl,emnlp,naacl,coling,colm,sigkdd,cikm,recsys,www,sigir,wsdm,icse,fse,interspeech"
         ).split(",")
         
-        ccf_categories = os.getenv("CCF_CATEGORIES", "AI,DM,DB,CN,SE,SC").split(",")
+        ccf_categories = os.getenv("CCF_CATEGORIES", "AI,DM,DB,CN,SE,SC,CG").split(",")
         
         return cls(
             discord_token=discord_token,
             openai_api_base=os.getenv("OPENAI_API_BASE", "http://litellm:4000/v1"),
             openai_api_key=os.getenv("OPENAI_API_KEY", "sk-test"),
             model_name=os.getenv("MODEL_NAME", "qwen-vl"),
-            web_viewer_url=os.getenv("WEB_VIEWER_URL", "http://192.168.0.88:5050"),
+            web_viewer_url=os.getenv("WEB_VIEWER_URL", web_viewer_url),
             show_thought_process=os.getenv("SHOW_THOUGHT_PROCESS", "hidden"),
             target_conferences=[c.strip() for c in target_conferences],
             ccf_categories=[c.strip() for c in ccf_categories],

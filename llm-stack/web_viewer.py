@@ -4,7 +4,6 @@ import os
 
 app = FastAPI()
 
-# 리포트 저장소 생성 및 마운트
 os.makedirs("/app/reports", exist_ok=True)
 app.mount("/", StaticFiles(directory="/app/reports", html=True), name="reports")
 

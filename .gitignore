@@ -211,3 +211,5 @@ __marimo__/
 
 *private*
 .env
+
+reports/
